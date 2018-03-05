@@ -22,6 +22,31 @@ RUN apt-get clean && \
 
 EXPOSE 137/udp 138/udp 139 445
 
-ADD smb.sh .
-RUN chmod +x smb.sh
-CMD /smb.sh
+RUN cat > /etc/samba/smb.conf <<EOF \
+[global] \
+socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=65536 SO_SNDBUF=65536 \
+smb ports = 445 \
+max protocol = SMB2 \
+min receivefile size = 16384 \
+deadtime = 30 \
+os level = 20 \
+map to guest = bad user \
+printer = bsd \
+printcap name = /dev/null \
+load printers = no \
+create mask = 0644 \
+force create mode = 0644 \
+directory mask = 0755 \
+force directory mode = 0755 \
+browsable = yes \
+writable = yes \
+guest account = root \
+force user = root \
+force group = root \
+[Public] \
+path = /data/share \
+guest ok = yes \
+read only = no \
+EOF
+
+ENTRYPOINT "ionice -c 3 nmbd -D && exec ionice -c 3 smbd -FS --configfile=/etc/samba/smb.conf </dev/null"
