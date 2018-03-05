@@ -14,6 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 FROM resin/rpi-raspbian:stretch
+
 RUN apt-get update && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends samba-common-bin samba \
     && apt-get clean && \
