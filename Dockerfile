@@ -23,29 +23,29 @@ EXPOSE 137/udp 138/udp 139 445
 
 RUN cat /etc/samba/smb.conf
 
-RUN echo $'[global]\n
-socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=65536 SO_SNDBUF=65536\n
-smb ports = 445\n
-max protocol = SMB2\n
-min receivefile size = 16384\n
-deadtime = 30\n
-os level = 20\n
-map to guest = bad user\n
-printer = bsd\n
-printcap name = /dev/null\n
-load printers = no\n
-create mask = 0644\n
-force create mode = 0644\n
-directory mask = 0755\n
-force directory mode = 0755\n
-browsable = yes\n
-writable = yes\n
-guest account = root\n
-force user = root\n
-force group = root\n
-[Public]\n
-path = /data/share\n
-guest ok = yes\n
+RUN echo $'[global]\n\
+socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=65536 SO_SNDBUF=65536\n\
+smb ports = 445\n\
+max protocol = SMB2\n\
+min receivefile size = 16384\n\
+deadtime = 30\n\
+os level = 20\n\
+map to guest = bad user\n\
+printer = bsd\n\
+printcap name = /dev/null\n\
+load printers = no\n\
+create mask = 0644\n\
+force create mode = 0644\n\
+directory mask = 0755\n\
+force directory mode = 0755\n\
+browsable = yes\n\
+writable = yes\n\
+guest account = root\n\
+force user = root\n\
+force group = root\n\
+[Public]\n\
+path = /data/share\n\
+guest ok = yes\n\
 read only = no' >> /etc/samba/smb.conf
 
 ENTRYPOINT "ionice -c 3 nmbd -D && exec ionice -c 3 smbd -FS --configfile=/etc/samba/smb.conf </dev/null"
