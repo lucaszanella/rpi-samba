@@ -23,7 +23,7 @@ EXPOSE 137/udp 138/udp 139 445
 
 RUN cat /etc/samba/smb.conf
 
-RUN echo $'[global]\n\
+RUN echo '[global]\n\
 socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=65536 SO_SNDBUF=65536\n\
 smb ports = 445\n\
 max protocol = SMB2\n\
@@ -46,6 +46,8 @@ force group = root\n\
 [Public]\n\
 path = /data/share\n\
 guest ok = yes\n\
-read only = no' >> /etc/samba/smb.conf
+read only = no' > /etc/samba/smb.conf
 
-ENTRYPOINT "ionice -c 3 nmbd -D && exec ionice -c 3 smbd -FS --configfile=/etc/samba/smb.conf </dev/null"
+RUN cat /etc/samba/smb.conf
+
+ENTRYPOINT "/bin/bash ionice -c 3 nmbd -D && exec ionice -c 3 smbd -FS --configfile=/etc/samba/smb.conf </dev/null"

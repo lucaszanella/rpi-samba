@@ -9,12 +9,16 @@ This container allows you to share files over network using SMB protocol, used b
 
 Build a Docker image using this command:
 
-`sudo docker build -t rpi-samba .`
+`
+sudo docker build -t rpi-samba .
+`
 
 A Docker image named 'rpi-samba' is now available.
 Create a new Docker container from this image:
 
-`sudo docker run --name rpi-samba --restart always -v $PWD/public:/data/share -p 445:445 -p 139:139 -p 137:137/udp -p 138:138/udp rpi-samba`
+`
+sudo docker run --name rpi-samba --restart unless-stopped -v $PWD/public:/data/share -p 445:445 -p 139:139 -p 137:137/udp -p 138:138/udp rpi-samba
+`
 
 The Docker container exports a public network share named 'Public', linked to a local directory using a Docker volume.
 The Samba share is using the directory <code>/data/share</code> in the Docker image.
