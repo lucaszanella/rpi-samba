@@ -21,31 +21,31 @@ RUN apt-get update && apt-get upgrade -y \
 
 EXPOSE 137/udp 138/udp 139 445
 
-RUN cat > /etc/samba/smb.conf <<EOF \
-[global] \
-socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=65536 SO_SNDBUF=65536 \
-smb ports = 445 \
-max protocol = SMB2 \
-min receivefile size = 16384 \
-deadtime = 30 \
-os level = 20 \
-map to guest = bad user \
-printer = bsd \
-printcap name = /dev/null \
-load printers = no \
-create mask = 0644 \
-force create mode = 0644 \
-directory mask = 0755 \
-force directory mode = 0755 \
-browsable = yes \
-writable = yes \
-guest account = root \
-force user = root \
-force group = root \
-[Public] \
-path = /data/share \
-guest ok = yes \
-read only = no \
-EOF
+RUN cat /etc/samba/smb.conf
+
+RUN echo $'[global]\n
+socket options = TCP_NODELAY IPTOS_LOWDELAY SO_RCVBUF=65536 SO_SNDBUF=65536\n
+smb ports = 445\n
+max protocol = SMB2\n
+min receivefile size = 16384\n
+deadtime = 30\n
+os level = 20\n
+map to guest = bad user\n
+printer = bsd\n
+printcap name = /dev/null\n
+load printers = no\n
+create mask = 0644\n
+force create mode = 0644\n
+directory mask = 0755\n
+force directory mode = 0755\n
+browsable = yes\n
+writable = yes\n
+guest account = root\n
+force user = root\n
+force group = root\n
+[Public]\n
+path = /data/share\n
+guest ok = yes\n
+read only = no' >> /etc/samba/smb.conf
 
 ENTRYPOINT "ionice -c 3 nmbd -D && exec ionice -c 3 smbd -FS --configfile=/etc/samba/smb.conf </dev/null"
