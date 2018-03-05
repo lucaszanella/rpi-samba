@@ -17,7 +17,7 @@ A Docker image named 'rpi-samba' is now available.
 Create a new Docker container from this image:
 
 `
-sudo docker run --restart unless-stopped -v $PWD/public:/data/share -p 445:445 -p 139:139 -p 137:137/udp -p 138:138/udp -i -d rpi-samba
+sudo docker run --restart unless-stopped -v /home/samba:/data/share -p 445:445 -p 139:139 -p 137:137/udp -p 138:138/udp -i -d rpi-samba
 `
 
 The Docker container exports a public network share named 'Public', linked to a local directory using a Docker volume.
